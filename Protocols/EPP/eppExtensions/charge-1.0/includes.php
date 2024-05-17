@@ -8,7 +8,7 @@ include_once(dirname(__FILE__) . '/eppData/chargeEppDomain.php');
 
 include_once(dirname(__FILE__) . '/eppResponses/chargeEppCheckDomainResponse.php');
 $this->addCommandResponse('Metaregistrar\EPP\eppCheckDomainRequest', 'Metaregistrar\EPP\chargeEppCheckDomainResponse');
-
+$this->addCommandResponse('Metaregistrar\EPP\verisignEppCheckDomainRequest', 'Metaregistrar\EPP\chargeEppCheckDomainResponse');
 include_once(dirname(__FILE__) . '/eppResponses/chargeEppInfoDomainResponse.php');
 $this->addCommandResponse('Metaregistrar\EPP\eppInfoDomainRequest', 'Metaregistrar\EPP\chargeEppInfoDomainResponse');
 
