@@ -12,7 +12,7 @@ class eppSyncDomainRequest extends eppDomainRequest {
      * @param DateTime $syncDate Date to sync the domain to
      */
     public function __construct($domainName, $syncDate = null) {
-        parent::__construct();  // Ensuring the parent constructor is called
+        parent::__construct('sync');  // Ensuring the parent constructor is called
         $this->setSyncDomain($domainName, $syncDate);
     }
 
