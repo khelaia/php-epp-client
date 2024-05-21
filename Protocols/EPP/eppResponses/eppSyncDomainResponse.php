@@ -1,7 +1,6 @@
 <?php
-namespace App\Services\EPP;
+namespace Metaregistrar\EPP;
 
-use Metaregistrar\EPP\eppResponse;
 use SimpleXMLElement;
 
 class eppSyncDomainResponse extends eppResponse {
