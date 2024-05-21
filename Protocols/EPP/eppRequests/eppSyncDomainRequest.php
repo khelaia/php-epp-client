@@ -7,39 +7,49 @@ use SimpleXMLElement;
 
 class eppSyncDomainRequest extends eppDomainRequest {
     /**
+     * Domain name to be synced
+     * @var string
+     */
+    private $domainName;
+
+    /**
+     * Sync date formatted as YYYY-MM-DD
+     * @var string
+     */
+    private $syncDateFormatted;
+
+    /**
      * eppSyncDomainRequest constructor.
      * @param string $domainName Domain to be synced
-     * @param DateTime $syncDate Date to sync the domain to
+     * @param DateTime|null $syncDate Date to sync the domain to, defaults to 15th of the next month
      */
     public function __construct($domainName, $syncDate = null) {
-        parent::__construct('sync');  // Ensuring the parent constructor is called
-        $this->setSyncDomain($domainName, $syncDate);
+        parent::__construct('sync');
+        $this->domainName = $domainName;
+        $this->syncDateFormatted = $syncDate ? $syncDate->format('Y-m-d') : (new DateTime('first day of next month'))->modify('+14 days')->format('Y-m-d');
     }
 
     /**
-     * Set the domain and sync date.
-     * @param string $domainName
-     * @param DateTime|null $syncDate Defaults to 15th of next month if null
+     * Overriding a hypothetical buildCommand() method from the base class to construct the specific XML for sync command.
      */
-    private function setSyncDomain($domainName, $syncDate) {
-        if (!$syncDate) {
-            $syncDate = new DateTime('first day of next month');
-            $syncDate->modify('+14 days'); // Setting to the 15th of next month
-        }
-        $syncDateFormatted = $syncDate->format('Y-m-d');
+    protected function buildCommand() {
+        $update = $this->createElement('update');
+        $domainUpdate = $this->createElement('domain:update');
+        $domainUpdate->setAttribute('xmlns:domain', 'urn:ietf:params:xml:ns:domain-1.0');
 
-        $this->addDomainUpdate($domainName, $syncDateFormatted);
-    }
+        $nameElement = $this->createElement('domain:name', $this->domainName);
+        $domainUpdate->appendChild($nameElement);
 
-    /**
-     * Add domain update elements to the XML.
-     * @param string $domainName
-     * @param string $syncDateFormatted
-     */
-    private function addDomainUpdate($domainName, $syncDateFormatted) {
-        $this->addCommand('update');
-        $this->addUpdate('domain', 'update');
-        $this->addDomainName($domainName);
-        $this->addExtension('syncDate', $syncDateFormatted);
+        $extension = $this->createElement('extension');
+        $syncElement = $this->createElement('sync:update');
+        $syncElement->setAttribute('xmlns:sync', 'urn:ietf:params:xml:ns:epp-sync-1.0');
+        $syncDateElement = $this->createElement('sync:date', $this->syncDateFormatted);
+        $syncElement->appendChild($syncDateElement);
+
+        $extension->appendChild($syncElement);
+        $update->appendChild($domainUpdate);
+        $update->appendChild($extension);
+
+        $this->epp->appendChild($update);
     }
 }
