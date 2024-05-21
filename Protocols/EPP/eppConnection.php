@@ -252,6 +252,7 @@ class eppConnection {
         $this->responses['Metaregistrar\\EPP\\eppCreateRequest'] = 'Metaregistrar\\EPP\\eppCreateResponse';
         $this->responses['Metaregistrar\\EPP\\eppUpdateRequest'] = 'Metaregistrar\\EPP\\eppUpdateResponse';
         $this->responses['Metaregistrar\\EPP\\eppDeleteRequest'] = 'Metaregistrar\\EPP\\eppDeleteResponse';
+        $this->responses['Metaregistrar\\EPP\\eppSyncDomainRequest'] = 'Metaregistrar\\EPP\\eppSyncDomainResponse';
     }
 
     function __destruct() {
